@@ -28,13 +28,13 @@ void led_task(void *params)
   {
     gpio_put(B_LED, 0);
     gpio_put(R_LED, 1);
-    vTaskDelay(500);
+    vTaskDelay(pdMS_TO_TICKS(500));
     gpio_put(R_LED, 0);
     gpio_put(G_LED, 1);
-    vTaskDelay(500);
+    vTaskDelay(pdMS_TO_TICKS(500));
     gpio_put(G_LED, 0);
     gpio_put(B_LED, 1);
-    vTaskDelay(500);
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
@@ -43,7 +43,7 @@ void buzzer_task(void *params)
   buzzer_init();
   while (true)
   {
-    beep(1500);
+    beep(1000);
   }
 }
 
@@ -95,8 +95,8 @@ int main()
   stdio_init_all();
 
   xTaskCreate(led_task, "LED_Task", 256, NULL, 1, &led_task_handle);
-  xTaskCreate(buzzer_task, "Buzzer_Task", 256, NULL, 2, &buzzer_task_handle);
-  xTaskCreate(button_task, "Button_Task", 256, NULL, 0, NULL);
+  xTaskCreate(buzzer_task, "Buzzer_Task", 256, NULL, 1, &buzzer_task_handle);
+  xTaskCreate(button_task, "Button_Task", 256, NULL, 2, NULL);
   vTaskStartScheduler();
 
   while (1)
