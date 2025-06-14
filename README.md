@@ -25,6 +25,7 @@ Criar e gerenciar múltiplas tasks utilizando o FreeRTOS no microcontrolador RP2
 | Buzzer     | Emite um *beep* periodicamente            | GPIO21                           |
 | Botão A    | Para suspender/retomar a tarefa dos LEDs  | GPIO5                            |
 | Botão B    | Para suspender/retomar a tarefa do Buzzer | GPIO6                            |
+| Display OLED | Exibe o estado atual das tasks | GPIO14 (SDA) GPIO15 (SCL) |
 
 ## Estrutura do Projeto 📂
 
