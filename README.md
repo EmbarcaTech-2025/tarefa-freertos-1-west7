@@ -46,7 +46,7 @@ tarefa-freertos-1-west7/
 
 ### O que acontece se todas as tarefas tiverem a mesma prioridade?
 
-Quando todas as tarefas têm a mesma prioridade, o escalonador do FreeRTOS utiliza um escalonamento circular ([Round-Robin](https://pt.wikipedia.org/wiki/Round-robin)) para alternar entre elas. Isso significa que cada tarefa terá uma fatia de tempo igual para ser executada, permitindo que todas tenham a chance de rodar. Apesar de justo, o principal problema deste algoritmo é: se a fatia de tempo (ou *quantum*) de cada tarefa for muito curta, pode haver um overhead significativo devido à troca frequente de contexto entre as tarefas. Isso pode levar a uma redução no desempenho geral do sistema. 
+Quando todas as tarefas têm a mesma prioridade, o escalonador do FreeRTOS utiliza um escalonamento circular [Round-Robin](https://west7.github.io/FSO/notes/04_gerencia_do_processador/#422-round-robin-escalonamento-circular) para alternar entre elas. Isso significa que cada tarefa terá uma fatia de tempo igual para ser executada, permitindo que todas tenham a chance de rodar. Apesar de justo, o principal problema deste algoritmo é: se a fatia de tempo (ou *quantum*) de cada tarefa for muito curta, pode haver um overhead significativo devido à troca frequente de contexto entre as tarefas. Isso pode levar a uma redução no desempenho geral do sistema. 
 
 Outro ponto importante é que, como as tarefas desta atividade são relativamente simples e rápidas, o efeito do escalonamento circular não é tão perceptível. No entanto, em sistemas mais complexos, isso poderia levar a um aumento no tempo de resposta e na latência (queda de desempenho significativa).
 
