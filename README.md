@@ -63,6 +63,7 @@ Quando `vTaskDelay` é utilizado, a tarefa entra em estado de bloqueio, fazendo 
 
 O maior risco de usar polling sem prioridades é o monopólio da CPU por uma única tarefa. A tarefa de polling, ou seja, verificar algo constantemente, é uma tarefa que nunca cede o processador, o que causaria "starvation" para outras tarefas de mesma prioridade. No código, caso eu coloque a task dos botões (faz polling) com uma prioridade maior que as outras, em um primeiro momento, nada seria afetado. Porém, caso eu removesse a linha do delay:
 
+
 ```c
 void button_task(void *params)
 {
@@ -76,14 +77,22 @@ xTaskCreate(button_task, "Button_Task", 256, NULL, 2, NULL); // Prioridade maior
 ```
 O que aconteceria seria que a task dos botões ficaria em um loop infinito, consumindo toda a CPU e impedindo que as outras tarefas (LEDs e Buzzer) fossem executadas. Isso levaria a um sistema não responsivo, onde os LEDs não piscariam e o Buzzer não emitiria sons, pois a tarefa de polling estaria sempre rodando.
 
+### Usando Semaphores (Extra)
 
+Ao usar semáforos, a sincronização é feita de maneira eficiente, contudo existem algumas diferenças importantes em comparação ao uso de `vTaskSuspend`: ao suspender a tarefa, ela é retirada da fila de execução, ou seja, ela é ignorada pelo escalonador até que seja retomada. Já com semáforos, a tarefa permanece na fila de execução, mas fica bloqueada até que o semáforo seja liberado (polling). 
+
+Os semáforos são mais flexíveis e permitem uma comunicação mais eficiente entre tarefas, especialmente em sistemas com múltiplas tarefas que precisam compartilhar recursos ou sincronizar ações. Em contraste, `vTaskSuspend` é mais simples e pode ser útil em casos onde uma tarefa precisa ser completamente interrompida e retomada posteriormente, mas não serve para proteger recursos específicos ou sinalizar eventos.
+
+A suspensão de tarefas é um evento que vêm de fora, isso implica que a tarefa não tem a chance de "se preparar" para ser suspensa (e.g. liberar um recurso, salvar um estado, etc.) isso pode levar a comportamentos inesperados, além de que o fluxo de execução pode ser mais difícil de prever. Isso pode ser claramente visto no código, onde com o uso de `vTaskSuspend`, a tarefa dos LEDs e do Buzzer são suspensas exatamente no estado em que estão, exatamente no momento em que o botão é pressionado, isto é, se o LED estava vermelho, ele será suspenso nesse estado e não terá a chance de mudar para verde ou azul. Enquanto que com semáforos, a tarefa sempre fechará o ciclo de execução antes de ser bloqueada, sempre parando no estado final de execução, ou seja, se o LED estava vermelho, ele irá mudar para verde e depois azul antes de ser bloqueado. Claro que isso depende de como a tarefa é implementada, eu poderia "forçar" o estado final da tarefa, caso isso fosse necessário.
+
+Evidentemente, o uso de semáforos é mais adequado para sistemas embarcados, onde a eficiência e a previsibilidade são cruciais. Eles permitem uma melhor gestão de recursos e evitam problemas como deadlocks e starvation, que podem ocorrer com o uso inadequado de `vTaskSuspend`.
 
 ## Execução 🧪
 
 1. Faça o clone do projeto:
 
 ```bash
-git clone https://github.com/west7/guilherme_westphall_embarcatech_HBr_2025.git
+git clone https://github.com/EmbarcaTech-2025/tarefa-freertos-1-west7.git
 ```
 
 2. Compile e Embarque o firmware na Raspberry:
